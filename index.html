@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATH | Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e31b23;--red-dark:#c9161d;--navy:#071321;--navy-light:#10283e;--text:#17202b;--muted:#788391;--border:#e3e7ec;--bg:#f4f6f8;--white:#fff;--green:#0f9d58;--amber:#d98b06;--blue:#1d6fb8}
+body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:inherit}
+
+/* ===== HEADER ===== */
+.top{position:sticky;top:0;z-index:50;height:68px;display:flex;align-items:center;gap:18px;padding:0 28px;color:#fff;
+  background:radial-gradient(circle at 12% 0,rgba(227,27,35,.28),transparent 32%),linear-gradient(135deg,#06111d 0%,#0a1b2c 55%,#163b5b 100%)}
+.burger{display:none;background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+.top .logo{height:40px;width:auto;display:block}
+.top .logo-text{display:none;font-weight:800;font-size:18px}
+.search{flex:1;max-width:420px;margin-left:24px;position:relative}
+.search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#8798a9;font-size:13px}
+.search input{width:100%;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;padding:0 14px 0 38px;font-size:13px;outline:none;transition:.2s}
+.search input::placeholder{color:#8798a9}
+.search input:focus{background:rgba(255,255,255,.12);border-color:var(--red)}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:14px}
+.campus{height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;padding:0 12px;font-size:13px;font-weight:600;outline:none;cursor:pointer}
+.campus option{color:#17202b}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;cursor:pointer}
+.icon-btn:hover{background:rgba(255,255,255,.14)}
+.icon-btn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid #0a1b2c}
+.user{display:flex;align-items:center;gap:10px;padding-left:14px;border-left:1px solid rgba(255,255,255,.14)}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8f0f15);display:grid;place-items:center;font-weight:700;font-size:13px}
+.user b{display:block;font-size:13px}.user small{color:#8798a9;font-size:11px}
+
+/* ===== LAYOUT ===== */
+.layout{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 68px)}
+.side{position:sticky;top:68px;height:calc(100vh - 68px);padding:24px 16px 18px;display:flex;flex-direction:column;overflow-y:auto;color:#c9d3df;
+ background:radial-gradient(circle at 0 0,rgba(227,27,35,.18),transparent 40%),linear-gradient(180deg,#0a1b2c 0%,#071321 100%);border-right:1px solid rgba(255,255,255,.05)}
+.side h6{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5f7286;margin:20px 12px 9px;font-weight:700}
+.side h6:first-child{margin-top:0}
+.nav a{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:12px;color:#aab8c7;font-weight:600;font-size:13px;margin-bottom:3px;transition:.2s;position:relative}
+.nav a i{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.05);color:#8ea1b6;font-size:14px;transition:.2s}
+.nav a:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav a:hover i{background:rgba(255,255,255,.1);color:#fff}
+.nav a.on{color:#fff;background:linear-gradient(90deg,rgba(227,27,35,.3),rgba(227,27,35,.04));box-shadow:inset 0 0 0 1px rgba(227,27,35,.3)}
+.nav a.on i{background:linear-gradient(135deg,var(--red),#8f0f15);color:#fff;box-shadow:0 6px 16px rgba(227,27,35,.45)}
+.nav a.on::before{content:"";position:absolute;left:-16px;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;background:var(--red)}
+.nav .badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+.help{margin-top:auto;padding:16px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:12px;line-height:1.6;color:#9fb0c1}
+.help b{display:block;color:#fff;font-size:13px;margin-bottom:2px}
+.help a{display:inline-flex;align-items:center;gap:8px;margin-top:8px;color:#fff;font-weight:600}
+.help a i{color:var(--red)}
+.side-foot{margin-top:14px;text-align:center;color:#5f7286;font-size:10px;line-height:1.6}
+.main{padding:30px 34px 50px;min-width:0}
+
+/* ===== COMMON ===== */
+.eyebrow{color:var(--red);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.page-h h1{font-size:28px;letter-spacing:-1px}.page-h p{color:var(--muted);margin-top:4px}
+.btn{height:44px;padding:0 20px;border:0;border-radius:10px;background:var(--red);color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 10px 25px rgba(227,27,35,.18);transition:.25s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--red-dark);transform:translateY(-2px)}
+.btn.ghost{background:rgba(255,255,255,.1);box-shadow:none;border:1px solid rgba(255,255,255,.18)}
+.btn.ghost:hover{background:rgba(255,255,255,.18)}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px}
+.card h3{font-size:15px;letter-spacing:-.3px;margin-bottom:4px}.card .sub{color:var(--muted);font-size:12px;margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-bottom:20px}
+.chip{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.c-green{background:#e7f6ee;color:var(--green)}.c-amber{background:#fff4dd;color:var(--amber)}.c-blue{background:#e6f1fb;color:var(--blue)}.c-grey{background:#eef1f4;color:#687482}.c-red{background:#fdebec;color:var(--red)}
+
+/* ===== HERO + KPI ===== */
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:34px 38px;color:#fff;margin-bottom:22px;
+  background:radial-gradient(circle at 15% 10%,rgba(227,27,35,.3),transparent 32%),linear-gradient(135deg,#06111d 0%,#0a1b2c 55%,#163b5b 100%)}
+.hero::after{content:"\f072";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:40px;top:-10px;font-size:190px;color:rgba(255,255,255,.05);transform:rotate(-35deg)}
+.hero::before{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(255,255,255,.07);border-radius:50%;right:-120px;bottom:-240px}
+.hero h1{font-size:34px;letter-spacing:-2px;line-height:1.1;margin-bottom:8px;position:relative}
+.hero h1 span{color:var(--red)}
+.hero p{color:#b8c4d0;max-width:520px;line-height:1.7;position:relative}
+.hero .acts{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;position:relative}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.kpi .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:17px;margin-bottom:16px}
+.kpi b{display:block;font-size:28px;letter-spacing:-1.5px}.kpi span{color:var(--muted);font-size:12px;font-weight:500}
+.kpi em{position:absolute;right:18px;top:20px;font-style:normal;font-size:11px;font-weight:700}
+.up{color:var(--green)}.down{color:var(--red)}
+
+/* ===== CHARTS ===== */
+.bars{display:flex;align-items:flex-end;gap:16px;height:190px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar i{width:100%;max-width:46px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--red),#8f0f15);position:relative;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.bar:nth-child(odd) i{background:linear-gradient(180deg,#1c4b73,var(--navy-light))}
+.bar i::before{content:attr(data-v);position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--text)}
+.bar small{color:var(--muted);font-size:11px;font-weight:600}
+.donut{display:flex;align-items:center;gap:24px}
+.ring{width:130px;height:130px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--red) 0 58%,#163b5b 58% 100%)}
+.ring div{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-weight:800;font-size:20px;letter-spacing:-1px}
+.ring small{display:block;font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0}
+.legend p{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;font-weight:600}
+.legend p:last-child{margin:0}.legend s{width:10px;height:10px;border-radius:3px;background:var(--red)}
+.legend p+p s{background:#163b5b}.legend span{color:var(--muted);font-weight:500;margin-left:auto}
+
+/* ===== MODULE TILES ===== */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin:30px 0 16px}
+.sec-h h2{font-size:19px;letter-spacing:-.7px}.sec-h p{color:var(--muted);font-size:12px}
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.mod{position:relative;background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;transition:.25s;display:block;overflow:hidden}
+.mod::after{content:"\f061";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:20px;bottom:20px;font-size:12px;color:var(--red);opacity:0;transform:translateX(-8px);transition:.25s}
+.mod:hover{transform:translateY(-4px);border-color:rgba(227,27,35,.4);box-shadow:0 18px 38px rgba(7,19,33,.09)}
+.mod:hover::after{opacity:1;transform:none}
+.mod .mi{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:19px;color:#fff;margin-bottom:18px;background:linear-gradient(135deg,var(--navy-light),var(--navy))}
+.mod:nth-child(3n+1) .mi{background:linear-gradient(135deg,var(--red),#8f0f15)}
+.mod h4{font-size:15px;letter-spacing:-.4px;margin-bottom:6px}.mod p{color:var(--muted);font-size:12px;line-height:1.6;padding-right:14px}
+.mod .badge{position:absolute;top:20px;right:20px}
+
+/* ===== TABLES ===== */
+.tools{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.tools .f{position:relative;flex:1;min-width:220px}
+.tools .f i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#98a3af;font-size:13px}
+.inp,.sel{height:44px;border:1px solid var(--border);border-radius:10px;background:#fafbfc;font-size:13px;outline:none;transition:.25s;color:var(--text)}
+.inp{width:100%;padding:0 14px 0 38px}.sel{padding:0 12px;font-weight:600}
+.inp:focus,.sel:focus{background:#fff;border-color:var(--red);box-shadow:0 0 0 4px rgba(227,27,35,.07)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#a0a9b3;padding:0 14px 12px;font-weight:700}
+td{padding:14px;border-top:1px solid #edf0f3;font-size:13px;vertical-align:middle}
+tbody tr{transition:.15s;cursor:pointer}tbody tr:hover{background:#fafbfc}
+.who{display:flex;align-items:center;gap:12px;font-weight:600}
+.who .avatar{width:36px;height:36px;font-size:12px;color:#fff}
+.who small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+
+/* ===== FEE REFERENCE ===== */
+.fee{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid #edf0f3;font-size:12.5px}
+.fee:first-of-type{border:0}.fee b{letter-spacing:-.3px}
+.fee-h{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:700;margin:16px 0 4px}
+.fee-h:first-of-type{margin-top:0}
+
+/* ===== MODULE PAGES ===== */
+.feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.feat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px}
+.feat i{color:var(--red);font-size:16px;margin-bottom:14px;display:block}.feat h4{margin-bottom:6px;font-size:14px}.feat p{color:var(--muted);font-size:12px;line-height:1.6}
+.note{margin-top:22px;padding:16px 20px;border-radius:12px;background:#fff;border:1px dashed #cfd6de;color:var(--muted);font-size:12.5px;display:flex;gap:12px;align-items:center}
+.note i{color:var(--red)}
+
+/* ===== REGISTRATION FORM ===== */
+.crumb{color:var(--muted);font-size:12px;margin-bottom:10px}.crumb a{color:var(--red);font-weight:600}
+.idp{display:inline-flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:12px;padding:11px 16px;font-size:12px;color:var(--muted)}
+.idp i{color:var(--red)}.idp b{color:var(--text);font-size:14px;letter-spacing:.4px}
+.stepper{display:flex;gap:4px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;margin-bottom:20px;overflow-x:auto}
+.stp{flex:1;min-width:92px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;font-size:11px;font-weight:600;color:#a0a9b3;text-align:center}
+.stp i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:#eef1f4;color:#788391;position:relative;z-index:1;transition:.25s}
+.stp::after{content:"";position:absolute;top:18px;left:calc(50% + 24px);right:calc(-50% + 24px);height:2px;background:#e3e7ec}
+.stp:last-child::after{display:none}
+.stp.dn::after{background:var(--red)}
+.stp.dn i{background:var(--red);color:#fff;font-size:0}
+.stp.dn i::before{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;font-size:13px}
+.stp.on i{background:var(--navy);color:#fff;box-shadow:0 0 0 4px rgba(227,27,35,.25)}
+.stp.on,.stp.dn{color:var(--text)}
+.formcard{background:#fff;border:1px solid var(--border);border-radius:20px;padding:34px 38px}
+.st{display:none}.st.on{display:block;animation:sin .35s}
+@keyframes sin{from{opacity:0;transform:translateY(8px)}}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid #edf0f3}
+.sh h3{font-size:21px;letter-spacing:-.8px}.sh p{color:var(--muted);font-size:13px;margin-top:4px}
+.sub-h{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin:32px 0 16px;display:flex;align-items:center;gap:12px}
+.sub-h::after{content:"";flex:1;height:1px;background:#edf0f3}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.fg.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fld label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:8px}.fld label b{color:var(--red)}
+.fld .inp,.fld .sel{width:100%;height:50px;padding:0 14px}
+.fld textarea.inp{height:auto;padding:12px 14px;resize:vertical;font-family:inherit}
+.fld input[readonly]{background:#f0f3f6;font-weight:700}
+.fld small{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.fld.bad .inp,.fld.bad .sel{border-color:var(--red);background:#fff8f8}
+.fld.bad::after{content:"This field is required";color:var(--red);font-size:11px;display:block;margin-top:5px}
+.fld label.chk,.chk{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:#4b5766;cursor:pointer;margin:0}
+.chk input{accent-color:var(--red);width:17px;height:17px}
+.full{grid-column:1/-1}.hid{display:none!important}
+.pers{display:grid;grid-template-columns:150px 1fr;gap:30px;align-items:start}
+.photo{width:150px;height:180px;border-radius:16px;border:2px dashed #cfd6de;background:#fafbfc center/cover;display:grid;place-items:center;cursor:pointer;color:var(--muted);font-size:12px;font-weight:600;text-align:center;transition:.2s}
+.photo:hover{border-color:var(--red);color:var(--red)}.photo i{display:block;font-size:26px;margin-bottom:8px}
+.elig{display:flex;gap:14px;align-items:flex-start;margin-top:26px;padding:16px 18px;border-radius:14px;font-size:13px;line-height:1.6;border:1px solid}
+.elig i{font-size:20px;margin-top:2px}.elig b{display:block;font-size:14px}
+.elig.ok{background:#e7f6ee;border-color:#bfe6d0;color:#0b6b3c}.elig.am{background:#fff4dd;border-color:#f3dba4;color:#8a5a00}.elig.no{background:#fdebec;border-color:#f6c2c5;color:#a5121a}
+.docs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.up{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:20px;border:1.5px dashed #cfd6de;border-radius:14px;background:#fafbfc;cursor:pointer;transition:.2s;font-size:12px;color:var(--muted);word-break:break-all}
+.up:hover{border-color:var(--red);background:#fff}.up i{font-size:20px;color:var(--red);margin-bottom:6px}.up b{color:var(--text);font-size:13px}
+.up.done{border-style:solid;border-color:#bfe6d0;background:#f3fbf7}.up.done i{color:var(--green)}
+.feeg{display:grid;grid-template-columns:1fr 340px;gap:30px}
+.vch{border-radius:18px;padding:24px;color:#fff;position:relative;overflow:hidden;align-self:start;background:radial-gradient(circle at 15% 10%,rgba(227,27,35,.3),transparent 40%),linear-gradient(135deg,#06111d,#0a1b2c 55%,#163b5b)}
+.vt{display:flex;justify-content:space-between;font-weight:700;font-size:13px;margin-bottom:22px}.vt i{color:var(--red)}
+.vch small{color:#8798a9;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.vch>b{display:block;font-size:22px;letter-spacing:-.5px;margin:4px 0 18px}
+.vr{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px}.vr span{color:#8798a9}.vr em{font-style:normal;font-weight:600;text-align:right}
+.vamt{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.3)}.vamt b{font-size:22px}
+.vch p{color:#8798a9;font-size:10px;margin-top:14px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:24px}
+.sum div{padding:14px 16px;background:#fafbfc;border:1px solid var(--border);border-radius:12px}.sum span{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}.sum b{font-size:13px}
+.fnav{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:24px;border-top:1px solid #edf0f3;gap:12px;flex-wrap:wrap}.fnav>div{display:flex;gap:12px}
+#stx{color:var(--muted);font-size:12px;font-weight:600}
+.btn.light{background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:none}.btn.light:hover{background:#f4f6f8}
+.ok-card{text-align:center;padding:60px 20px}
+.okc{width:76px;height:76px;border-radius:50%;background:#e7f6ee;color:var(--green);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+.ok-card h2{font-size:26px;letter-spacing:-1px;margin-bottom:6px}.ok-card p{color:var(--muted)}
+.idbox{display:inline-block;margin:24px 0;padding:16px 36px;border-radius:14px;background:var(--navy);color:#fff}
+.idbox span{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8798a9}.idbox b{font-size:28px;letter-spacing:-1px}
+.ok-card .acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+@media(max-width:700px){.pers,.feeg,.fg,.fg.c3,.docs{grid-template-columns:1fr}.formcard{padding:24px 18px}.stp span{display:none}.stp{min-width:46px}}
+
+.fld input:disabled{background:#f0f3f6;cursor:not-allowed}
+.tabs{display:flex;gap:6px;margin-bottom:18px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:none;padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;transition:.2s;white-space:nowrap}
+.tabs button.on{background:var(--navy);color:#fff}
+.btn.sm{height:34px;padding:0 14px;font-size:12px;box-shadow:none}
+.modal{position:fixed;inset:0;background:rgba(7,19,33,.55);backdrop-filter:blur(3px);display:none;place-items:center;z-index:80;padding:20px}
+.modal.on{display:grid}
+.mbox{background:#fff;border-radius:20px;width:100%;max-width:560px;padding:30px;box-shadow:0 30px 80px rgba(7,19,33,.4);max-height:90vh;overflow:auto}
+.mbox h3{font-size:20px;letter-spacing:-.6px;margin-bottom:4px}.mbox .sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.mbox .acts{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+.toast{position:fixed;bottom:26px;right:26px;background:var(--navy);color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 18px 40px rgba(7,19,33,.3);transform:translateY(90px);opacity:0;transition:.3s;z-index:99;border-left:4px solid var(--red)}
+.toast.show{transform:none;opacity:1}
+
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}.burger{display:block}
+ .side{position:fixed;left:0;top:68px;z-index:40;width:280px;transform:translateX(-100%);transition:.3s;box-shadow:0 20px 50px rgba(7,19,33,.25)}
+ .side.open{transform:none}.search,.user div,.campus{display:none}.main{padding:22px 18px 40px}.hero{padding:26px 22px}.hero h1{font-size:27px}
+}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.top{padding:0 16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER (with logo) ============ -->
+<header class="top">
+  <button class="burger" id="burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  <a href="#dashboard" aria-label="Aviation Training Hub">
+    <!-- Put your downloaded logo next to this file as: ath-logo.png -->
+    <img src="ath-logo.png" alt="Aviation Training Hub" class="logo"
+         onerror="this.onerror=null;this.src='https://ath.org.pk/wp-content/uploads/2025/06/Easa-logo-red-and-white.png'">
+  </a>
+  <div class="search"><i class="fa-solid fa-magnifying-glass"></i>
+    <input id="gsearch" type="text" placeholder="Search students, ID or CNIC..." autocomplete="off"></div>
+  <div class="top-r">
+    <button class="icon-btn" aria-label="Notifications"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+    <div class="user"><div class="avatar">AD</div><div><b>Admin</b><small>Super Admin</small></div>
+      <a href="login.html" class="icon-btn" style="display:grid;place-items:center" aria-label="Sign out" title="Sign out"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="side" id="side">
+    <nav class="nav" id="nav"></nav>
+    <div class="help"><b>Need help?</b>Contact the ATH admin team.<br>
+      <a href="mailto:info@ath.org.pk"><i class="fa-regular fa-envelope"></i>info@ath.org.pk</a></div>
+    <div class="side-foot"><i class="fa-solid fa-plane" style="color:var(--red)"></i> Engineering Flight Innovations<br>Aviation Training Hub &copy; 2026</div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+<div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   DATA  (SAMPLE VALUES: replace with your API later)
+===================================================== */
+const MODS=[
+ {id:'dashboard',i:'fa-gauge-high',n:'Dashboard',d:'Your day at a glance: admissions, fees and deadlines.'},
+ {id:'enquiries',i:'fa-headset',n:'Enquiries',d:'Track leads from counselling forms and convert them to students.',b:'12',
+  f:[['Lead list','Every enquiry with phone, city and status.'],['Source tracking','See which leads came from Google, Facebook or referrals.'],['Follow-ups','Reminders and call notes per counsellor.'],['Convert to student','Turn a lead into a registration in one click.']]},
+ {id:'students',i:'fa-user-graduate',n:'Student Registration',d:'Registered students and the Add Student form.'},
+ {id:'programs',i:'fa-book-open',n:'Programs and Modules',d:'EASA modules M1 to M17, HND units and other programs.',
+  f:[['School of Aviation','Aircraft Maintenance Engineering: 6 semesters, modules M1 to M17 by year.'],['School of Computing','Pearson HND Digital Technologies: 4 semesters, three pathways.'],['Awarding bodies','EASA, Pearson and NCC Education.'],['Fee structure','Admission, semester, exam and OJT fees per program.']]},
+ {id:'batches',i:'fa-calendar-days',n:'Batches, Timetable and Attendance',d:'Batches, class schedules and daily attendance.',
+  f:[['Batches','Create intakes (Fall or Winter) per campus and program.'],['Timetable','Weekly class schedule by batch, room and faculty.'],['Attendance','Mark and review attendance with shortage alerts.'],['Faculty allocation','Assign teachers to modules and batches.']]},
+ {id:'fees',i:'fa-wallet',n:'Fees and Accounts',d:'Vouchers, payments, installments and defaulters.',b:'8 due',
+  f:[['Fee vouchers','Generate admission and semester vouchers.'],['Payments','Record cash, bank and online payments with receipts.'],['Installments','Payment plans and due-date tracking.'],['Defaulters','Overdue list with reminders. Supports PKR, EUR and GBP.']]},
+ {id:'exams',i:'fa-file-signature',n:'Exams, Results and Transcripts',d:'Exam sessions, module enrolment, results and transcripts.',
+  f:[['Exam sessions','Dates and last registration date for each session.'],['Module enrolment','Register students for EASA modules.'],['Results entry','Marks, attempts and pass or fail status.'],['Transcripts','Print official transcripts with the ATH logo.']]},
+ {id:'assignments',i:'fa-pen-ruler',n:'Assignments',d:'HND assignments, deadlines, grades and feedback.',
+  f:[['Assignment briefs','Units, deadlines and submission rules.'],['Submissions','Track who has submitted and who is late.'],['Grading','Pass, merit or distinction with feedback.'],['Resubmissions','Manage second attempts.']]},
+ {id:'ojt',i:'fa-briefcase',n:'OJT',d:'On-the-job training partners, placements and hours.',
+  f:[['Partner companies','Approved OJT partners and their scope.'],['Placements','Assign students to a partner.'],['Hours log','Track training hours and reports.'],['OJT fees','Fees start from PKR 8,000 depending on partner.']]},
+ {id:'documents',i:'fa-folder-open',n:'Documents',d:'Certificates, fee challans, letters and student files.',
+  f:[['Letters','Enrolment, experience and bonafide letters.'],['Certificates','Course completion certificates.'],['Fee challans','Printable vouchers and statements.'],['Student files','CNIC, transcripts and uploaded documents.']]},
+ {id:'reports',i:'fa-chart-pie',n:'Reports',d:'Admissions, fees and results, by campus and program.',
+  f:[['Admissions report','By source, campus, school and month.'],['Fee report','Collection, outstanding and defaulters.'],['Exam report','Pass rates per module.'],['Export','Download as PDF or Excel.']]},
+ {id:'settings',i:'fa-gear',n:'Settings',d:'Users, roles, campuses and audit log.',
+  f:[['Users','Add employees and reset passwords.'],['Roles and permissions','Admissions, accounts, exams, campus manager.'],['Campuses','Campus details.'],['Audit log','Who viewed or changed what, and when.']]}
+];
+const KPI={
+ all:{stu:482,enq:37,fee:'12.4M',due:'1.8M',bars:[38,52,44,61,73,58]}};
+const MONTHS=['Apr','May','Jun','Jul','Aug','Sep'];
+const STU=[
+ ['Ayesha Khan','ATH-26-0148','AME (EASA)','main','Enrolled','Paid'],
+ ['Hamza Ali','ATH-26-0147','HND Cyber Security','main','Fee paid','Partial'],
+ ['Sara Ahmed','ATH-26-0146','HND Data Science','main','Documents verified','Pending'],
+ ['Bilal Hussain','ATH-26-0145','AME (EASA)','main','Enrolled','Paid'],
+ ['Zainab Malik','ATH-26-0144','HND Artificial Intelligence','main','Draft','Pending'],
+ ['Usman Raza','ATH-25-0139','AME (EASA)','main','Enrolled','Partial'],
+ ['Hina Tariq','ATH-25-0131','HND Cyber Security','main','Enrolled','Paid'],
+ ['Farhan Saeed','ATH-25-0127','AME (EASA)','main','Fee paid','Paid']];
+const CN={main:'Main Campus'};
+const CAMPUSES=['Main Campus'];
+const SC={'Enrolled':'c-green','Fee paid':'c-blue','Documents verified':'c-amber','Draft':'c-grey'};
+const FC={'Paid':'c-green','Partial':'c-amber','Pending':'c-red'};
+const COL=['#e31b23','#10283e','#1c4b73','#8f0f15','#163b5b'];
+let campus='all',query='';
+
+/* ===== helpers ===== */
+const $=s=>document.querySelector(s);
+const ini=n=>n.split(' ').map(w=>w[0]).join('').slice(0,2);
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)};
+const rows=()=>STU.filter(s=>(campus==='all'||s[3]===campus)&&(!query||(s[0]+s[1]+s[2]).toLowerCase().includes(query.toLowerCase())));
+const tableHtml=list=>list.length?`<div class="tbl"><table><thead><tr><th>Student</th><th>Program</th><th>Status</th><th>Fees</th></tr></thead><tbody>${
+ list.map((s,i)=>`<tr onclick="viewStu('${s[1]}')"><td><div class="who"><div class="avatar" style="background:${COL[i%5]}">${ini(s[0])}</div><div>${s[0]}<small>${s[1]}</small></div></div></td><td>${s[2]}</td><td><span class="chip ${SC[s[4]]}">${s[4]}</span></td><td><span class="chip ${FC[s[5]]}">${s[5]}</span></td></tr>`).join('')
+ }</tbody></table></div>`:'<div class="empty"><i class="fa-regular fa-face-frown"></i><br>No students match your search.</div>';
+
+/* ===== views ===== */
+function vDashboard(){
+ const k=KPI[campus],max=Math.max(...k.bars),h=new Date().getHours(),g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+ return `
+ <section class="hero"><div class="eyebrow" style="color:#b9c6d3">${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+  <h1>${g}, <span>Admin</span></h1>
+  <p>Manage admissions, fees, exams and training from one place.</p>
+  <div class="acts"><a class="btn" href="#students/new"><i class="fa-solid fa-user-plus"></i>Add Student</a>
+   <a class="btn ghost" href="#enquiries"><i class="fa-solid fa-headset"></i>New Enquiry</a>
+   <a class="btn ghost" href="#fees"><i class="fa-solid fa-wallet"></i>Record Payment</a></div></section>
+
+ <div class="kpis">
+  <div class="kpi"><em class="up">+8.2%</em><div class="ic" style="background:#fdebec;color:var(--red)"><i class="fa-solid fa-user-graduate"></i></div><b>${k.stu}</b><span>Active students</span></div>
+  <div class="kpi"><em class="up">+12</em><div class="ic" style="background:#e6f1fb;color:var(--blue)"><i class="fa-solid fa-headset"></i></div><b>${k.enq}</b><span>New enquiries this month</span></div>
+  <div class="kpi"><em class="up">+5.4%</em><div class="ic" style="background:#e7f6ee;color:var(--green)"><i class="fa-solid fa-wallet"></i></div><b>${k.fee}</b><span>Fees collected (PKR)</span></div>
+  <div class="kpi"><em class="down">Action</em><div class="ic" style="background:#fff4dd;color:var(--amber)"><i class="fa-solid fa-triangle-exclamation"></i></div><b>${k.due}</b><span>Overdue fees (PKR)</span></div>
+ </div>
+
+ <div class="grid2">
+  <div class="card"><h3>Admissions</h3><p class="sub">New registrations per month</p>
+   <div class="bars">${k.bars.map((v,i)=>`<div class="bar"><i data-v="${v}" style="height:${v/max*82}%"></i><small>${MONTHS[i]}</small></div>`).join('')}</div></div>
+  <div class="card"><h3>Students by school</h3><p class="sub">Share of active students</p>
+   <div class="donut"><div class="ring"><div>${k.stu}<small>students</small></div></div>
+   <div class="legend"><p><s></s>Aviation<span>58%</span></p><p><s></s>Computing<span>42%</span></p></div></div></div>
+ </div>
+
+ <div class="sec-h"><div><h2>Modules</h2><p>Everything you manage at ATH</p></div></div>
+ <div class="mods">${MODS.filter(m=>m.id!=='dashboard').map(m=>`<a class="mod" href="#${m.id}">${m.b?`<span class="chip c-red badge">${m.b}</span>`:''}<div class="mi"><i class="fa-solid ${m.i}"></i></div><h4>${m.n}</h4><p>${m.d}</p></a>`).join('')}</div>
+
+ <div class="grid2" style="margin-top:30px">
+  <div class="card"><h3>Recent registrations</h3><p class="sub">Latest students added by your team</p>${tableHtml(rows().slice(0,5))}</div>
+  <div class="card"><h3>Fee quick reference</h3><p class="sub">Current fee structure from the ATH website</p>
+   <div class="fee-h">Aircraft Maintenance Engineering</div>
+   <div class="fee"><span>Admission (non-refundable)</span><b>PKR 150,000</b></div>
+   <div class="fee"><span>Semester (6 semesters)</span><b>PKR 140,000</b></div>
+   <div class="fee"><span>International EASA exam</span><b>&euro; 139</b></div>
+   <div class="fee"><span>OJT (from)</span><b>PKR 8,000</b></div>
+   <div class="fee-h">HND Digital Technologies</div>
+   <div class="fee"><span>Admission (non-refundable)</span><b>PKR 150,000</b></div>
+   <div class="fee"><span>Semester (4 semesters)</span><b>PKR 202,500</b></div>
+   <div class="fee"><span>International fee (yearly)</span><b>&pound; 350</b></div></div>
+ </div>`;
+}
+function vStudents(){
+ return `<div class="page-h"><div><div class="eyebrow">Admissions</div><h1>Student Registration</h1><p>${rows().length} registered ${rows().length===1?'student':'students'}. Click Add Student to register a new one.</p></div>
+  <a class="btn" href="#students/new"><i class="fa-solid fa-user-plus"></i>Add Student</a></div>
+ <div class="card"><div class="tools">
+  <div class="f"><i class="fa-solid fa-magnifying-glass"></i><input class="inp" id="q" placeholder="Search by name, ID or program" value="${query}"></div>
+  <select class="sel" id="fs"><option value="">All schools</option><option>AME</option><option>HND</option></select>
+  <select class="sel" id="fst"><option value="">All statuses</option>${Object.keys(SC).map(s=>`<option>${s}</option>`).join('')}</select></div>
+  <div id="tb">${tableHtml(rows())}</div></div>`;
+}
+function vModule(m){
+ return `<div class="page-h"><div><div class="eyebrow">Module</div><h1>${m.n}</h1><p>${m.d}</p></div></div>
+ <div class="feats">${m.f.map(f=>`<div class="feat"><i class="fa-solid ${m.i}"></i><h4>${f[0]}</h4><p>${f[1]}</p></div>`).join('')}</div>
+ <div class="note"><i class="fa-solid fa-circle-info"></i>This module's screens are the next to be built. The menu and layout are ready.</div>`;
+}
+
+/* =====================================================
+   STUDENT REGISTRATION FORM
+===================================================== */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nextNo=()=>Math.max(...STU.map(s=>+s[1].split('-')[2]))+1;
+const newId=()=>'ATH-'+String(new Date().getFullYear()).slice(2)+'-'+String(nextNo()).padStart(4,'0');
+const ST=['Personal','Contact','Program','Education','Documents','Fee voucher','Review'];
+const QUAL=['Matric / O-Levels','FSc / Intermediate','A-Levels','Level 3','Diploma (DAE)',"Bachelor's degree",'Other'];
+const PR={Aviation:['Aircraft Maintenance Engineering (EASA Part-66)'],Computing:['HND Digital Technologies (Pearson)','Computing Level 4/5 (NCC Education)']};
+const F=(l,n,t='text',o={})=>`<div class="fld ${o.w||''}" ${o.id?`id="${o.id}"`:''}><label>${l}${o.r?' <b>*</b>':''}</label>${
+ t==='select'?`<select class="sel" name="${n}" ${o.r?'required':''}><option value="">Select</option>${(o.o||[]).map(x=>`<option>${x}</option>`).join('')}</select>`
+ :t==='area'?`<textarea class="inp" name="${n}" rows="3" ${o.r?'required':''}></textarea>`
+ :`<input class="inp" type="${t}" name="${n}" value="${o.v||''}" ${o.r?'required':''} ${o.ro?'readonly':''} ${o.p?`placeholder="${o.p}"`:''}>`}${o.h||o.hi?`<small ${o.hi?`id="${o.hi}"`:''}>${o.h||''}</small>`:''}</div>`;
+const UP=(k,l,ic,c='')=>`<label class="up ${c}"><input type="file" name="d_${k}" hidden><i class="fa-solid ${ic}"></i><b>${l}</b><span>Click to upload</span></label>`;
+const HD=(t,d,x='')=>`<div class="sh"><div><h3>${t}</h3><p>${d}</p></div>${x}</div>`;
+
+function vForm(){
+ const id=newId();
+ return `
+ <div class="crumb"><a href="#students">Student Registration</a> / New student</div>
+ <div class="page-h"><div><h1>Register new student</h1><p>Complete each step. Required fields are marked with a red star.</p></div>
+  <div class="idp"><i class="fa-solid fa-id-card"></i>Student ID<b>${id}</b></div></div>
+ <div class="stepper">${ST.map((t,i)=>`<div class="stp"><i>${i+1}</i><span>${t}</span></div>`).join('')}</div>
+ <form id="sf" class="formcard" novalidate autocomplete="off">
+
+ <section class="st" data-s="0">${HD('Personal details','Enter the details as they appear on the CNIC or B-Form.')}
+  <div class="pers"><label class="photo"><input type="file" name="photo" accept="image/*" hidden><span><i class="fa-solid fa-camera"></i>Add photo</span></label>
+   <div class="fg">${F('Full Name','sname','text',{r:1})}${F("Father's Name",'father','text',{r:1})}${F('Gender','gender','select',{r:1,o:['Male','Female','Other']})}
+    ${F('Date of Birth','dob','date',{r:1,hi:'age'})}${F('CNIC / B-Form Number','cnic','text',{r:1,w:'full',p:'12345-1234567-1'})}</div></div>
+  <div class="sub-h">Guardian</div>
+  <div class="fg">${F('Guardian Name','gname','text',{r:1})}${F('Relation','grel','text',{r:1})}${F('Guardian CNIC','gcnic','text',{r:1,p:'12345-1234567-1'})}${F('Guardian Mobile','gmob','tel',{r:1,p:'03XX-XXXXXXX'})}</div></section>
+
+ <section class="st" data-s="1">${HD('Contact details','Addresses, phone numbers and next of kin.')}
+  <div class="fg">${F('Current Address','addr','area',{r:1})}${F('Permanent Address','paddr','area',{r:1})}
+   <label class="chk full"><input type="checkbox" id="same"> Permanent address is the same as current address</label></div>
+  <div class="fg c3" style="margin-top:22px">${F('Mobile Number','mobile','tel',{r:1,p:'03XX-XXXXXXX'})}${F('Email Address','email','email',{r:1})}${F('Emergency Contact Number','emg','tel',{r:1,p:'03XX-XXXXXXX'})}</div>
+  <div class="sub-h">Next of kin</div>
+  <div class="fg c3">${F('Name','nok','text',{r:1})}${F('Relation','nokrel','text',{r:1})}${F('Contact Number','nokph','tel',{r:1,p:'03XX-XXXXXXX'})}</div></section>
+
+ <section class="st" data-s="2">${HD('Program','Choose the campus, school and program.')}
+  <div class="fg">${F('Campus','campus','select',{r:1,o:CAMPUSES})}${F('School','school','select',{r:1,o:['Aviation','Computing']})}
+   ${F('Program','program','select',{r:1})}${F('Intake','intake','select',{r:1,o:['Fall','Winter']})}
+   ${F('HND Pathway','pathway','select',{r:1,id:'pw',w:'full',o:['Cyber Security','Artificial Intelligence','Data Science & Analytics']})}</div>
+  <div id="av" class="hid"><div class="sub-h">Aviation-specific details</div>
+   <div class="fg">${F('Course Applied For','course','select',{r:1,o:['Aircraft Maintenance Engineering (B1/B2)','PPL','CPL','IR','Ground School','Recurrent','Other']})}
+    ${F('PCAA Reference Number (if any)','pcaa','text',{h:'Existing PCAA reference or student license number'})}
+    ${F('Medical Certificate Status','medst','select',{o:['Class 1','Class 2','Not yet obtained']})}
+    ${F('Medical Certificate Expiry Date','medex','date')}
+    ${F('Previous Flying Hours (if any)','hours','text',{h:'Total hours, type, and recency'})}
+    ${F('Previous License / Rating Held','lic')}
+    ${F('Local Police Verification','police','select',{w:'full',o:['Not required','Required, not yet applied','Applied','Submitted / verified'],h:'Required by some Pakistani flying academies'})}</div></div></section>
+
+ <section class="st" data-s="3">${HD('Educational background','Qualification and marks. Eligibility is checked automatically.')}
+  <div class="fg">${F('Highest Qualification','qual','select',{r:1,o:QUAL})}${F('Institution Name','inst','text',{r:1})}
+   ${F('Year of Passing','year','number',{r:1,p:'2024'})}${F('Certificates Attached','certs','select',{r:1,o:['Yes','No, to follow']})}
+   ${F('Marks Obtained','marks','number',{r:1})}${F('Total Marks','total','number',{r:1})}
+   ${F('Percentage','pct','text',{ro:1,p:'Calculated automatically'})}${F('Grade (if given)','grade')}
+   ${F('Years of Work Experience','exp','number',{id:'xw',w:'full',h:'Needed when the student does not hold FSc, A-Levels or Level 3'})}</div>
+  <div class="elig am" id="el"></div></section>
+
+ <section class="st" data-s="4">${HD('Documents','Upload scans or photos. Missing documents can be added later.','<span class="chip c-blue" id="dc">0 uploaded</span>')}
+  <div class="docs">${UP('cnic','CNIC / B-Form copy','fa-id-card')}${UP('gcnic','Guardian CNIC copy','fa-user-shield')}${UP('cert','Educational certificates','fa-graduation-cap')}
+   ${UP('photos','Passport-size photos','fa-image')}${UP('exp','Experience letter (if any)','fa-briefcase')}
+   ${UP('police','Police verification','fa-shield-halved','av-only hid')}${UP('med','Medical certificate','fa-file-medical','av-only hid')}</div></section>
+
+ <section class="st" data-s="5">${HD('Admission fee voucher','Non-refundable fee paid at the time of admission.')}
+  <div class="feeg"><div class="fg">${F('Admission Fee (PKR)','fee','text',{ro:1,v:'150,000'})}${F('Discount (PKR)','disc','number',{v:'0'})}
+   ${F('Discount Reason (if any)','dreason','text',{w:'full'})}${F('Payable (PKR)','pay','text',{ro:1,v:'150,000'})}${F('Payment Method','pmethod','select',{o:['Cash','Bank transfer','Online payment','Cheque']})}
+   ${F('Amount Received (PKR)','recv','number',{v:'0'})}${F('Payment Date','pdate','date')}${F('Reference No.','pref','text',{w:'full'})}</div>
+   <div class="vch"><div class="vt"><span>Admission Fee Voucher</span><i class="fa-solid fa-plane"></i></div><small>Voucher no.</small><b>VCH-${id.slice(4)}</b>
+    <div class="vr"><span>Student</span><em id="vn">-</em></div><div class="vr"><span>Program</span><em id="vp">-</em></div>
+    <div class="vr"><span>Admission fee</span><em>PKR 150,000</em></div><div class="vr"><span>Discount</span><em id="vd">PKR 0</em></div>
+    <div class="vamt"><span>Payable</span><b id="vpay">PKR 150,000</b></div><p>Non-refundable. Payable at the time of admission.</p></div></div></section>
+
+ <section class="st" data-s="6">${HD('Review and register','Check the summary. Your Student ID is created when you register.')}
+  <div class="sum" id="sum"></div>
+  <div class="fg"><div class="fld full"><label class="chk"><input type="checkbox" name="dc1" required> I confirm the details entered are correct.</label></div>
+   <div class="fld full"><label class="chk"><input type="checkbox" name="dc2" required> The student has been told the admission fee is non-refundable.</label></div></div></section>
+
+ <div class="fnav"><button type="button" class="btn light" id="bk"><i class="fa-solid fa-arrow-left"></i>Back</button><span id="stx"></span>
+  <div><button type="button" class="btn light" id="dr">Save draft</button><button type="button" class="btn" id="nx"></button></div></div>
+ </form>`;
+}
+
+function initForm(){
+ const f=$('#sf'),N=ST.length,sid=newId();
+ let s=0;
+ const pw=()=>$('#pw').classList.toggle('hid',!/Pearson/.test(f.program.value));
+ const sch=()=>{const v=f.school.value,l=PR[v]||[];
+  f.program.innerHTML='<option value="">Select</option>'+l.map(x=>`<option>${x}</option>`).join('');
+  if(l.length===1)f.program.value=l[0];
+  $('#av').classList.toggle('hid',v!=='Aviation');
+  document.querySelectorAll('.av-only').forEach(e=>e.classList.toggle('hid',v!=='Aviation'));pw();elig()};
+
+ const elig=()=>{const q=f.qual.value,m=+f.marks.value,t=+f.total.value,pc=t?Math.round(m/t*1000)/10:0,ex=+f.exp.value||0,sc=f.school.value,e=$('#el');
+  f.pct.value=t&&m?pc+'%':'';
+  $('#xw').classList.toggle('hid',!(sc==='Computing'&&q&&!/FSc|A-Levels|Level 3|Bachelor/.test(q)));
+  let c='am',ic='fa-circle-question',h='Waiting for details',p='Choose the school and highest qualification to see the eligibility result.';
+  if(sc==='Aviation'){ic='fa-circle-info';h='Manual review';p='Entry criteria for the Aviation program are not published on the ATH website, so admissions will confirm eligibility.'}
+  else if(sc==='Computing'&&q){
+   if(/A-Levels|Level 3|Bachelor/.test(q)){c='ok';ic='fa-circle-check';h='Eligible';p=q+' meets the HND entry requirement.'}
+   else if(/FSc/.test(q)){
+    if(!t||!m){h='Enter marks';p='Add marks obtained and total marks to confirm the FSc result.'}
+    else if(pc>=60){c='ok';ic='fa-circle-check';h='Eligible';p='FSc / Intermediate with '+pc+'% (60% or above).'}
+    else{h='Needs review';p='The intermediate result is '+pc+'%, below 60%. Admissions must review this application.'}}
+   else if(ex>=3){c='ok';ic='fa-circle-check';h='Eligible on work experience';p=ex+' years of verifiable work experience with '+q+'.'}
+   else{c='no';ic='fa-circle-xmark';h='Not eligible yet';p='The HND needs FSc, A-Levels or Level 3, or 3 years of verifiable work experience.'}}
+  e.className='elig '+c;e.innerHTML=`<i class="fa-solid ${ic}"></i><div><b>${h}</b>${p}</div>`;f.dataset.e=c};
+
+ const fee=()=>{const d=+f.disc.value||0,p=Math.max(150000-d,0);
+  f.pay.value=p.toLocaleString('en-US');$('#vpay').textContent='PKR '+p.toLocaleString('en-US');$('#vd').textContent='PKR '+d.toLocaleString('en-US');
+  $('#vn').textContent=f.sname.value||'-';$('#vp').textContent=f.program.value||'-'};
+
+ const summ=()=>{const pth=$('#pw').classList.contains('hid')?'':' / '+f.pathway.value;
+  const r=[['Name',f.sname.value],['CNIC / B-Form',f.cnic.value],['Mobile',f.mobile.value],['Campus',f.campus.value],['School',f.school.value],
+   ['Program',f.program.value+pth],['Qualification',f.qual.value+(f.pct.value?' ('+f.pct.value+')':'')],['Eligibility',$('#el b').textContent],
+   ['Fee payable','PKR '+f.pay.value],['Received now','PKR '+(+f.recv.value||0).toLocaleString('en-US')],['Documents',$('#dc').textContent]];
+  $('#sum').innerHTML=r.map(x=>`<div><span>${x[0]}</span><b>${esc(x[1]||'-')}</b></div>`).join('')};
+
+ const go=n=>{s=n;
+  document.querySelectorAll('.st').forEach((e,i)=>e.classList.toggle('on',i===n));
+  document.querySelectorAll('.stp').forEach((e,i)=>{e.classList.toggle('on',i===n);e.classList.toggle('dn',i<n)});
+  $('#bk').style.visibility=n?'visible':'hidden';
+  $('#nx').innerHTML=n===N-1?'Register Student <i class="fa-solid fa-check"></i>':'Continue <i class="fa-solid fa-arrow-right"></i>';
+  $('#stx').textContent='Step '+(n+1)+' of '+N;
+  if(n===5)fee();if(n===N-1)summ();scrollTo({top:0,behavior:'smooth'})};
+
+ const valid=n=>{let bad=null;
+  document.querySelectorAll(`.st[data-s="${n}"] [required]`).forEach(e=>{
+   if(e.offsetParent===null)return;
+   const v=e.type==='checkbox'?(e.checked?'1':''):e.value.trim();let g=!!v;
+   if(g&&/cnic$/i.test(e.name))g=v.replace(/\D/g,'').length===13;
+   if(g&&/^(mobile|emg|nokph|gmob)$/.test(e.name))g=v.replace(/\D/g,'').length>=10;
+   if(g&&e.type==='email')g=e.checkValidity();
+   e.closest('.fld').classList.toggle('bad',!g);if(!g&&!bad)bad=e});
+  if(bad){bad.focus();toast('Please complete the highlighted fields')}return !bad};
+
+ const reg=()=>{
+  const due=Math.max(150000-(+f.disc.value||0),0),paid=+f.recv.value||0,e=f.dataset.e;
+  const fs=paid>=due?'Paid':paid>0?'Partial':'Pending',st=e==='ok'?(paid>=due?'Enrolled':paid>0?'Fee paid':'Documents verified'):'Draft';
+  const prog=f.school.value==='Aviation'?'AME (EASA)':/Pearson/.test(f.program.value)?'HND '+f.pathway.value.split(' &')[0]:'NCC Computing';
+  STU.unshift([esc(f.sname.value.trim()),sid,prog,'main',st,fs,{cnic:esc(f.cnic.value),mobile:esc(f.mobile.value),email:esc(f.email.value),g:esc(f.gname.value)}]);
+  $('#view').innerHTML=`<div class="card ok-card"><div class="okc"><i class="fa-solid fa-check"></i></div><h2>Student registered</h2>
+   <p>${esc(f.sname.value)} has been added successfully.</p>
+   <div class="idbox"><span>Student ID</span><b>${sid}</b></div>
+   <div class="acts"><a class="btn" href="#students"><i class="fa-solid fa-list"></i>View student list</a><a class="btn light" href="#students/new"><i class="fa-solid fa-user-plus"></i>Register another</a></div></div>`;
+  toast('Student registered: '+sid);scrollTo(0,0)};
+
+ f.onsubmit=e=>e.preventDefault();
+ $('#nx').onclick=()=>{if(!valid(s))return;s===N-1?reg():go(s+1)};
+ $('#bk').onclick=()=>go(s-1);
+ $('#dr').onclick=()=>toast('Drafts will save once the backend is connected');
+
+ f.addEventListener('input',e=>{const t=e.target,fl=t.closest('.fld');if(fl)fl.classList.remove('bad');
+  if(/cnic$/i.test(t.name)){const d=t.value.replace(/\D/g,'').slice(0,13);t.value=d.length>12?d.slice(0,5)+'-'+d.slice(5,12)+'-'+d.slice(12):d.length>5?d.slice(0,5)+'-'+d.slice(5):d}
+  if(['qual','marks','total','exp'].includes(t.name))elig();
+  if(['disc','sname','program'].includes(t.name))fee();
+  if(t.name==='addr'&&$('#same').checked)f.paddr.value=t.value;
+  if(t.name==='dob')$('#age').textContent=t.value?'Age: '+Math.floor((Date.now()-new Date(t.value))/31557600000)+' years':''});
+ f.addEventListener('change',e=>{const t=e.target;
+  if(t.name==='school')sch();if(t.name==='program')pw();
+  if(t.name==='medst'){f.medex.disabled=!/Class/.test(t.value);if(f.medex.disabled)f.medex.value=''}
+  if(t.id==='same'){f.paddr.value=t.checked?f.addr.value:'';f.paddr.readOnly=t.checked}
+  if(t.name==='photo'&&t.files[0]){const l=t.closest('.photo');l.style.backgroundImage=`url(${URL.createObjectURL(t.files[0])})`;l.querySelector('span').style.display='none'}
+  else if(t.type==='file'){const l=t.closest('.up');l.classList.toggle('done',!!t.files.length);l.querySelector('span').textContent=t.files.length?t.files[0].name:'Click to upload';
+   $('#dc').textContent=document.querySelectorAll('.up.done').length+' uploaded'}});
+ f.medex.disabled=true;sch();go(0);
+}
+
+/* =====================================================
+   MODAL + STUDENT PROFILE
+===================================================== */
+const closeModal=()=>$('#modal').classList.remove('on');
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+function viewStu(id){const s=STU.find(x=>x[1]===id),d=s[6]||{};
+ $('#mbox').innerHTML=`<h3>${s[0]}</h3><p class="sub">${s[1]} &middot; ${s[2]}</p><div class="sum">${
+  [['Status',s[4]],['Fee status',s[5]],['CNIC / B-Form',d.cnic],['Mobile',d.mobile],['Email',d.email],['Guardian',d.g]].map(x=>`<div><span>${x[0]}</span><b>${x[1]||'-'}</b></div>`).join('')
+ }</div><div class="acts"><button class="btn light" onclick="closeModal()">Close</button></div>`;$('#modal').classList.add('on')}
+function openModal(t,fields,save){
+ $('#mbox').innerHTML=`<h3>${t}</h3><p class="sub">Fill in the details below.</p><form id="mf" novalidate><div class="fg">${
+  fields.map((x,i)=>F(x[0],'m'+i,x[1]||'text',{r:1,o:x[2]})).join('')}</div>
+  <div class="acts"><button type="button" class="btn light" id="mc">Cancel</button><button type="submit" class="btn">Save</button></div></form>`;
+ $('#modal').classList.add('on');$('#mc').onclick=closeModal;
+ $('#mf').oninput=e=>e.target.closest('.fld')?.classList.remove('bad');
+ $('#mf').onsubmit=e=>{e.preventDefault();let ok=true;
+  document.querySelectorAll('#mf [required]').forEach(x=>{const g=!!x.value.trim();x.closest('.fld').classList.toggle('bad',!g);if(!g)ok=false});
+  if(!ok)return;save(fields.map((x,i)=>esc($('#mf').elements['m'+i].value.trim())));closeModal()};
+}
+
+/* =====================================================
+   MODULE SCREENS  (SAMPLE DATA: replace with your API)
+===================================================== */
+const TODAY=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+const stuOpt=()=>STU.map(x=>x[0]);
+const PRG=['AME (EASA)','HND Cyber Security','HND Artificial Intelligence','HND Data Science'];
+const CHIP={Paid:'c-green',Enrolled:'c-green',Pass:'c-green',Active:'c-green',Converted:'c-green',Open:'c-green',Issued:'c-green',Completed:'c-green',Distinction:'c-green',Merit:'c-blue',Upcoming:'c-blue',New:'c-blue',Submitted:'c-blue',Requested:'c-blue','Follow-up':'c-amber',Partial:'c-amber',Pending:'c-amber',Refer:'c-red',Fail:'c-red',Lost:'c-red',Overdue:'c-red',Closed:'c-grey',Draft:'c-grey',Inactive:'c-grey'};
+const AM=[['M1','Mathematics','Year 1','Exam'],['M2','Physics','Year 1','Exam'],['M3','Electrical Fundamentals','Year 1','Exam'],['M4','Electronic Fundamentals','Year 1','Exam'],['M5','Digital Techniques','Year 1','Exam'],['M6','Materials & Hardware','Year 1','Exam'],['M8','Basic Aerodynamics','Year 1','Exam'],['M9','Human Factors','Year 1','MCQ only'],['M17','Propellers','Year 1','MCQ only'],['M7','Maintenance Practices','Year 2','MCQ + Essay'],['M10','Aviation Legislation','Year 2','MCQ only'],['M11','Aeroplane Aerodynamics','Year 2','Exam'],['M13','Aircraft Aerodynamics, Structures and Systems (Avionic)','Year 2','Exam'],['M15','Gas Turbines','Year 2','Exam']];
+const HU=[['Professional Practice in the Digital Economy','Year 1'],['Big Data & Visualisation','Year 1'],['Innovation & Digital Transformation','Year 1'],['Networking in the Cloud','Year 1'],['Cyber Security','Year 1'],['Security','Year 1'],['Programming','Year 1'],['Networking','Year 1'],['Business Intelligence','Year 2'],['Applied Cryptography in the Cloud','Year 2'],['Internet of Things','Year 2'],['Information Security Management in the Cloud','Year 2'],['Emerging Technologies','Year 2'],['Digital Sustainability','Year 2'],['Applied Security in the Cloud','Year 2'],['Pitching and Negotiating Skills','Year 2']];
+const D={
+ enquiries:{s:'Leads from counselling forms, calls and walk-ins.',tabs:[{n:'Enquiries',c:['Name','Phone','Interested in','Source','Status','Date'],
+  r:[['Ali Raza','0300-1112233','AME (EASA)','Google','New','22 Sep 2026'],['Mahnoor Iqbal','0311-2223344','HND Cyber Security','Facebook','Follow-up','21 Sep 2026'],['Hassan Javed','0322-3334455','HND Data Science','Instagram','Follow-up','19 Sep 2026'],['Rida Fatima','0333-4445566','AME (EASA)','Referral','Converted','17 Sep 2026'],['Talha Mehmood','0345-5556677','HND Artificial Intelligence','Walk-in','Lost','14 Sep 2026']],
+  a:{l:'Add Enquiry',f:[['Full Name'],['Phone','tel'],['Interested In','select',PRG],['Source','select',['Google','Facebook','Instagram','Referral','Walk-in']]],d:['New','@']}}]},
+ programs:{s:'EASA Part-66 modules and Pearson HND units.',tabs:[
+  {n:'Aviation modules',c:['Code','Module','Year','Assessment'],r:AM,a:{l:'Add Module',f:[['Code'],['Module'],['Year','select',['Year 1','Year 2']],['Assessment','select',['Exam','MCQ only','MCQ + Essay']]],d:[]}},
+  {n:'HND units',c:['Unit','Year'],r:HU,a:{l:'Add Unit',f:[['Unit'],['Year','select',['Year 1','Year 2']]],d:[]}}]},
+ batches:{s:'Batches, weekly timetable and attendance.',tabs:[
+  {n:'Batches',c:['Batch','Program','Intake','Students','Status'],r:[['AME-2026-A','AME (EASA)','Fall','24','Active'],['HND-CS-2026-A','HND Cyber Security','Fall','18','Active'],['HND-DS-2026-A','HND Data Science','Fall','12','Active'],['AME-2025-B','AME (EASA)','Winter','21','Active']],
+   a:{l:'Add Batch',f:[['Batch Code'],['Program','select',PRG],['Intake','select',['Fall','Winter']],['Students','number']],d:['Active']}},
+  {n:'Timetable',c:['Day','Time','Module / Unit','Batch','Faculty','Room'],r:[['Monday','09:00 - 11:00','M3 Electrical Fundamentals','AME-2026-A','Mr. Kamran','Lab 1'],['Monday','11:30 - 13:30','Cyber Security','HND-CS-2026-A','Ms. Nadia','Room 4'],['Tuesday','09:00 - 11:00','M1 Mathematics','AME-2026-A','Mr. Saad','Room 2'],['Wednesday','10:00 - 12:00','Programming','HND-DS-2026-A','Ms. Hira','Lab 3']],
+   a:{l:'Add Class',f:[['Day','select',['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']],['Time'],['Module / Unit'],['Batch'],['Faculty'],['Room']],d:[]}},
+  {n:'Attendance',c:['Student','Batch','Days present','Total days','Attendance'],r:[['Ayesha Khan','AME-2026-A','46','50','92%'],['Hamza Ali','HND-CS-2026-A','44','50','88%'],['Sara Ahmed','HND-DS-2026-A','48','50','96%'],['Bilal Hussain','AME-2025-B','39','50','78%']]}]},
+ fees:{s:'Fee vouchers, payments and receipts.',tabs:[
+  {n:'Vouchers',c:['Voucher','Student','Type','Amount (PKR)','Status'],r:[['VCH-26-0148','Ayesha Khan','Admission','150,000','Paid'],['VCH-26-0147','Hamza Ali','Admission','150,000','Partial'],['VCH-26-0146','Sara Ahmed','Admission','150,000','Pending'],['VCH-26-0145','Bilal Hussain','Semester','140,000','Paid'],['VCH-26-0144','Zainab Malik','Admission','150,000','Overdue']],
+   a:{l:'New Voucher',p:'VCH-26-',n:144,f:[['Student','select',stuOpt],['Type','select',['Admission','Semester','EASA Exam','International']],['Amount (PKR)','number']],d:['Pending']}},
+  {n:'Payments',c:['Receipt','Student','Amount (PKR)','Method','Date'],r:[['RCT-1042','Ayesha Khan','150,000','Bank transfer','20 Sep 2026'],['RCT-1041','Hamza Ali','100,000','Cash','18 Sep 2026'],['RCT-1040','Bilal Hussain','140,000','Online payment','15 Sep 2026']],
+   a:{l:'Record Payment',p:'RCT-',n:1040,f:[['Student','select',stuOpt],['Amount (PKR)','number'],['Method','select',['Cash','Bank transfer','Online payment','Cheque']]],d:['@']}}]},
+ exams:{s:'Exam sessions, results and transcripts.',tabs:[
+  {n:'Exam sessions',c:['Session','Type','Registration deadline','Status'],r:[['Summer 2026','EASA Part-66','29 Jun 2026','Closed'],['Winter 2026','EASA Part-66','01 Dec 2026','Upcoming'],['Term 1 2026','Pearson HND','10 Oct 2026','Open']],
+   a:{l:'Add Session',f:[['Session'],['Type','select',['EASA Part-66','Pearson HND']],['Registration Deadline','date']],d:['Upcoming']}},
+  {n:'Results',c:['Student','Module / Unit','Attempt','Result'],r:[['Ayesha Khan','M1 Mathematics','1','Pass'],['Bilal Hussain','M2 Physics','1','Fail'],['Bilal Hussain','M2 Physics','2','Pass'],['Hamza Ali','Cyber Security','1','Pending']],
+   a:{l:'Enter Result',f:[['Student','select',stuOpt],['Module / Unit'],['Attempt','select',['1','2','3']],['Result','select',['Pass','Fail','Pending']]],d:[]}},
+  {n:'Transcripts',c:['Student','Program','Issued','Status'],r:[['Hina Tariq','HND Cyber Security','12 Sep 2026','Issued'],['Usman Raza','AME (EASA)','-','Requested']],
+   a:{l:'Request Transcript',f:[['Student','select',stuOpt],['Program','select',PRG]],d:['-','Requested']}}]},
+ assignments:{s:'HND assignments, submissions and grades.',tabs:[
+  {n:'Assignments',c:['Unit','Title','Due date','Submitted','Status'],r:[['Programming','Unit 1 Assignment','30 Sep 2026','14 / 18','Open'],['Cyber Security','Threat Report','12 Oct 2026','6 / 18','Open'],['Networking','Network Design','05 Sep 2026','12 / 12','Closed']],
+   a:{l:'Add Assignment',f:[['Unit'],['Title'],['Due Date','date']],d:['0','Open']}},
+  {n:'Grades',c:['Student','Assignment','Grade'],r:[['Hamza Ali','Network Design','Merit'],['Sara Ahmed','Network Design','Distinction'],['Hina Tariq','Network Design','Refer']],
+   a:{l:'Add Grade',f:[['Student','select',stuOpt],['Assignment'],['Grade','select',['Distinction','Merit','Pass','Refer']]],d:[]}}]},
+ ojt:{s:'On-the-job training partners and placements. Fees start from PKR 8,000.',tabs:[
+  {n:'Partners',c:['Company','Scope','Fee from (PKR)','Status'],r:[['Sample Partner A','Line maintenance','8,000','Active'],['Sample Partner B','Component overhaul','12,000','Active'],['Sample Partner C','Avionics','10,000','Inactive']],
+   a:{l:'Add Partner',f:[['Company'],['Scope'],['Fee From (PKR)','number']],d:['Active']}},
+  {n:'Placements',c:['Student','Partner','Start date','Hours'],r:[['Ayesha Khan','Sample Partner A','01 Sep 2026','120'],['Usman Raza','Sample Partner B','15 Aug 2026','260']],
+   a:{l:'Add Placement',f:[['Student','select',stuOpt],['Partner'],['Start Date','date']],d:['0']}}]},
+ documents:{s:'Letters, certificates and fee statements.',tabs:[{n:'Requests',c:['Student','Document','Requested','Status'],
+  r:[['Hina Tariq','Enrolment letter','20 Sep 2026','Issued'],['Usman Raza','Transcript','19 Sep 2026','Requested'],['Ayesha Khan','Fee statement','18 Sep 2026','Issued']],
+  a:{l:'New Document',f:[['Student','select',stuOpt],['Document','select',['Enrolment letter','Experience letter','Fee statement','Transcript','Course completion certificate']]],d:['@','Requested']}}]},
+ reports:{s:'Summaries for admissions, fees and results.',tabs:[{n:'Reports',c:['Report','Description','Last generated',''],
+  r:[['Admissions','New registrations by month, source and program','22 Sep 2026','Generate'],['Fee collection','Collected, outstanding and overdue fees','22 Sep 2026','Generate'],['Exam results','Pass rates per module and unit','15 Sep 2026','Generate'],['Attendance','Attendance by batch, with shortage list','20 Sep 2026','Generate']]}]},
+ settings:{s:'Users, roles and activity.',tabs:[
+  {n:'Users',c:['Name','Email','Role','Status'],r:[['Admin User','admin@example.com','Super Admin','Active'],['Accounts User','accounts@example.com','Accounts','Active'],['Admissions User','admissions@example.com','Admissions','Active']],
+   a:{l:'Add User',f:[['Full Name'],['Email','email'],['Role','select',['Super Admin','Admissions','Accounts','Exam Coordinator','Faculty']]],d:['Active']}},
+  {n:'Roles',c:['Role','Access'],r:[['Super Admin','Everything'],['Admissions','Enquiries, Student Registration, Documents'],['Accounts','Fees and Accounts, Reports'],['Exam Coordinator','Programs, Exams, Assignments'],['Faculty','Timetable, Attendance, Assignments']]},
+  {n:'Audit log',c:['Time','User','Action'],r:[['22 Sep 2026, 10:42','Admissions User','Registered a new student'],['22 Sep 2026, 09:15','Accounts User','Recorded a payment'],['21 Sep 2026, 16:30','Admin User','Added a user']]}]}
+};
+function vMod(m){
+ const d=D[m.id],ti=TAB[m.id]||0,t=d.tabs[ti],a=t.a;
+ return `<div class="page-h"><div><div class="eyebrow">Module</div><h1>${m.n}</h1><p>${d.s}</p></div>${a?`<button class="btn" id="madd"><i class="fa-solid fa-plus"></i>${a.l}</button>`:''}</div>
+ ${d.tabs.length>1?`<div class="tabs">${d.tabs.map((x,i)=>`<button data-t="${i}" class="${i===ti?'on':''}">${x.n}</button>`).join('')}</div>`:''}
+ <div class="card"><div class="tools"><div class="f"><i class="fa-solid fa-magnifying-glass"></i><input class="inp" id="mq" placeholder="Search ${t.n.toLowerCase()}"></div></div><div id="mt"></div></div>`;
+}
+const TAB={};
+const mTable=t=>{const q=($('#mq')?$('#mq').value:'').toLowerCase(),r=t.r.filter(x=>!q||x.join(' ').toLowerCase().includes(q));
+ return r.length?`<div class="tbl"><table><thead><tr>${t.c.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map((v,i)=>`<td>${
+  v==='Generate'?`<button class="btn light sm" onclick="toast('Reports run once the backend is connected')">Generate</button>`:CHIP[v]?`<span class="chip ${CHIP[v]}">${v}</span>`:i===0?`<b>${v}</b>`:v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty">Nothing found.</div>'};
+function initMod(m){
+ const d=D[m.id],t=d.tabs[TAB[m.id]||0];
+ $('#mt').innerHTML=mTable(t);$('#mq').oninput=()=>{$('#mt').innerHTML=mTable(t)};
+ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{TAB[m.id]=+b.dataset.t;render()});
+ if($('#madd'))$('#madd').onclick=()=>{const a=t.a;
+  openModal(a.l,a.f.map(x=>[x[0],x[1],typeof x[2]==='function'?x[2]():x[2]]),v=>{
+   t.r.unshift([...(a.p?[a.p+(a.n+t.r.length)]:[]),...v,...a.d.map(x=>x==='@'?TODAY():x)]);render();toast(a.l+': saved')})};
+}
+
+/* ===== router ===== */
+const cur=()=>(location.hash||'#dashboard').slice(1)||'dashboard';
+let route=cur();
+const nav=r=>{route=r;location.hash=r;render()};
+const GR=[['Main',['dashboard','enquiries','students']],['Academics',['programs','batches','exams','assignments']],['Operations',['fees','ojt','documents','reports']],['System',['settings']]];
+const SN={students:'Student Registration',programs:'Programs & Modules',batches:'Batches & Timetable',exams:'Exams & Results',fees:'Fees & Accounts'};
+function render(){
+ try{
+ const [id,sub]=route.split('/'),m=MODS.find(x=>x.id===id)||MODS[0],nw=m.id==='students'&&sub==='new';
+ $('#nav').innerHTML=GR.map(g=>`<h6>${g[0]}</h6>`+g[1].map(i=>{const x=MODS.find(y=>y.id===i);
+  return `<a href="#${x.id}" class="${x.id===m.id?'on':''}"><i class="fa-solid ${x.i}"></i>${SN[x.id]||x.n}${x.b?`<span class="badge">${x.b}</span>`:''}</a>`}).join('')).join('');
+ $('#view').innerHTML=nw?vForm():m.id==='dashboard'?vDashboard():m.id==='students'?vStudents():vMod(m);
+ $('#side').classList.remove('open');document.title='ATH | '+(nw?'New Student':m.n);scrollTo(0,0);
+ if(nw)initForm();
+ else if(m.id==='students'){
+  const t=()=>{const a=$('#fs').value,b=$('#fst').value;$('#tb').innerHTML=tableHtml(rows().filter(s=>(!a||s[2].startsWith(a))&&(!b||s[4]===b)))};
+  $('#q').oninput=e=>{query=e.target.value;$('#gsearch').value=query;t()};$('#fs').onchange=t;$('#fst').onchange=t;
+ }else if(m.id!=='dashboard')initMod(m);
+ }catch(err){console.error(err);$('#view').innerHTML=`<div class="card"><h3>Something went wrong</h3><p class="sub">${esc(err.message)}</p></div>`}
+}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){e.preventDefault();nav(a.getAttribute('href').slice(1))}});
+addEventListener('hashchange',()=>{if(cur()!==route){route=cur();render()}});
+$('#gsearch').oninput=e=>{query=e.target.value;route!=='students'?nav('students'):render();$('#gsearch').focus()};
+$('#burger').onclick=()=>$('#side').classList.toggle('open');
+render();
+</script>
+</body>
+</html>
