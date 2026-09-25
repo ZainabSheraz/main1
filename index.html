@@ -130,6 +130,7 @@ tbody tr{transition:.15s;cursor:pointer}tbody tr:hover{background:#fafbfc}
 .who{display:flex;align-items:center;gap:12px;font-weight:600}
 .who .avatar{width:36px;height:36px;font-size:12px;color:#fff}
 .who small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+.mono{font-variant-numeric:tabular-nums;letter-spacing:.3px;color:#4b5766;white-space:nowrap}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 
 /* ===== FEE REFERENCE ===== */
@@ -218,6 +219,12 @@ tbody tr{transition:.15s;cursor:pointer}tbody tr:hover{background:#fafbfc}
 .mbox{background:#fff;border-radius:20px;width:100%;max-width:560px;padding:30px;box-shadow:0 30px 80px rgba(7,19,33,.4);max-height:90vh;overflow:auto}
 .mbox h3{font-size:20px;letter-spacing:-.6px;margin-bottom:4px}.mbox .sub{color:var(--muted);font-size:13px;margin-bottom:22px}
 .mbox .acts{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+.tasks{display:flex;flex-direction:column;gap:4px}
+.task{display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:12px;transition:.2s}
+.task:hover{background:#f4f6f8}
+.task>i{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;background:rgba(227,27,35,.08);color:var(--red);font-size:14px}
+.task div{flex:1;min-width:0}.task b{display:block;font-size:13px}.task span{color:var(--muted);font-size:12px}
+.task em{font-style:normal;font-weight:700;font-size:12px;background:var(--red);color:#fff;min-width:26px;height:26px;padding:0 8px;border-radius:20px;display:grid;place-items:center}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--navy);color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 18px 40px rgba(7,19,33,.3);transform:translateY(90px);opacity:0;transition:.3s;z-index:99;border-left:4px solid var(--red)}
 .toast.show{transform:none;opacity:1}
 
@@ -271,8 +278,8 @@ const MODS=[
  {id:'enquiries',i:'fa-headset',n:'Enquiries',d:'Track leads from counselling forms and convert them to students.',b:'12',
   f:[['Lead list','Every enquiry with phone, city and status.'],['Source tracking','See which leads came from Google, Facebook or referrals.'],['Follow-ups','Reminders and call notes per counsellor.'],['Convert to student','Turn a lead into a registration in one click.']]},
  {id:'students',i:'fa-user-graduate',n:'Student Registration',d:'Registered students and the Add Student form.'},
- {id:'programs',i:'fa-book-open',n:'Programs and Modules',d:'EASA modules M1 to M17, HND units and other programs.',
-  f:[['School of Aviation','Aircraft Maintenance Engineering: 6 semesters, modules M1 to M17 by year.'],['School of Computing','Pearson HND Digital Technologies: 4 semesters, three pathways.'],['Awarding bodies','EASA, Pearson and NCC Education.'],['Fee structure','Admission, semester, exam and OJT fees per program.']]},
+ {id:'programs',i:'fa-book-open',n:'Programs and Modules',d:'EASA Part-66 modules M1 to M17 and Pearson HND units.',
+  f:[['School of Aviation','Aircraft Maintenance Engineering: 6 semesters, modules M1 to M17 by year.'],['School of Computing','Pearson HND Digital Technologies: 4 semesters, three pathways.'],['Awarding bodies','EASA (Part-66) and Pearson (BTEC Higher Nationals).'],['Fee structure','Admission, semester, exam and OJT fees per program.']]},
  {id:'batches',i:'fa-calendar-days',n:'Batches, Timetable and Attendance',d:'Batches, class schedules and daily attendance.',
   f:[['Batches','Create intakes (Fall or Winter) per campus and program.'],['Timetable','Weekly class schedule by batch, room and faculty.'],['Attendance','Mark and review attendance with shortage alerts.'],['Faculty allocation','Assign teachers to modules and batches.']]},
  {id:'fees',i:'fa-wallet',n:'Fees and Accounts',d:'Vouchers, payments, installments and defaulters.',b:'8 due',
@@ -294,14 +301,14 @@ const KPI={
  all:{stu:482,enq:37,fee:'12.4M',due:'1.8M',bars:[38,52,44,61,73,58]}};
 const MONTHS=['Apr','May','Jun','Jul','Aug','Sep'];
 const STU=[
- ['Ayesha Khan','ATH-26-0148','AME (EASA)','main','Enrolled','Paid'],
- ['Hamza Ali','ATH-26-0147','HND Cyber Security','main','Fee paid','Partial'],
- ['Sara Ahmed','ATH-26-0146','HND Data Science','main','Documents verified','Pending'],
- ['Bilal Hussain','ATH-26-0145','AME (EASA)','main','Enrolled','Paid'],
- ['Zainab Malik','ATH-26-0144','HND Artificial Intelligence','main','Draft','Pending'],
- ['Usman Raza','ATH-25-0139','AME (EASA)','main','Enrolled','Partial'],
- ['Hina Tariq','ATH-25-0131','HND Cyber Security','main','Enrolled','Paid'],
- ['Farhan Saeed','ATH-25-0127','AME (EASA)','main','Fee paid','Paid']];
+ ['Ayesha Khan','ATH-26-0148','AME (EASA)','main','Enrolled','Paid','35202-1234567-1'],
+ ['Hamza Ali','ATH-26-0147','HND Cyber Security','main','Fee paid','Partial','35201-2345678-2'],
+ ['Sara Ahmed','ATH-26-0146','HND Data Science','main','Documents verified','Pending','42101-3456789-3'],
+ ['Bilal Hussain','ATH-26-0145','AME (EASA)','main','Enrolled','Paid','61101-4567890-4'],
+ ['Zainab Malik','ATH-26-0144','HND Artificial Intelligence','main','Draft','Pending','35202-5678901-5'],
+ ['Usman Raza','ATH-25-0139','AME (EASA)','main','Enrolled','Partial','37405-6789012-6'],
+ ['Hina Tariq','ATH-25-0131','HND Cyber Security','main','Enrolled','Paid','35201-7890123-7'],
+ ['Farhan Saeed','ATH-25-0127','AME (EASA)','main','Fee paid','Paid','42201-8901234-8']];
 const CN={main:'Main Campus'};
 const CAMPUSES=['Main Campus'];
 const SC={'Enrolled':'c-green','Fee paid':'c-blue','Documents verified':'c-amber','Draft':'c-grey'};
@@ -314,8 +321,8 @@ const $=s=>document.querySelector(s);
 const ini=n=>n.split(' ').map(w=>w[0]).join('').slice(0,2);
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)};
 const rows=()=>STU.filter(s=>(campus==='all'||s[3]===campus)&&(!query||(s[0]+s[1]+s[2]).toLowerCase().includes(query.toLowerCase())));
-const tableHtml=list=>list.length?`<div class="tbl"><table><thead><tr><th>Student</th><th>Program</th><th>Status</th><th>Fees</th></tr></thead><tbody>${
- list.map((s,i)=>`<tr onclick="viewStu('${s[1]}')"><td><div class="who"><div class="avatar" style="background:${COL[i%5]}">${ini(s[0])}</div><div>${s[0]}<small>${s[1]}</small></div></div></td><td>${s[2]}</td><td><span class="chip ${SC[s[4]]}">${s[4]}</span></td><td><span class="chip ${FC[s[5]]}">${s[5]}</span></td></tr>`).join('')
+const tableHtml=list=>list.length?`<div class="tbl"><table><thead><tr><th>Student</th><th>CNIC / B-Form</th><th>Program</th><th>Status</th><th>Fees</th></tr></thead><tbody>${
+ list.map((s,i)=>`<tr onclick="viewStu('${s[1]}')"><td><div class="who"><div class="avatar" style="background:${COL[i%5]}">${ini(s[0])}</div><div>${s[0]}<small>${s[1]}</small></div></div></td><td class="mono">${s[6]||'-'}</td><td>${s[2]}</td><td><span class="chip ${SC[s[4]]}">${s[4]}</span></td><td><span class="chip ${FC[s[5]]}">${s[5]}</span></td></tr>`).join('')
  }</tbody></table></div>`:'<div class="empty"><i class="fa-regular fa-face-frown"></i><br>No students match your search.</div>';
 
 /* ===== views ===== */
@@ -384,7 +391,7 @@ const nextNo=()=>Math.max(...STU.map(s=>+s[1].split('-')[2]))+1;
 const newId=()=>'ATH-'+String(new Date().getFullYear()).slice(2)+'-'+String(nextNo()).padStart(4,'0');
 const ST=['Personal','Contact','Program','Education','Documents','Fee voucher','Review'];
 const QUAL=['Matric / O-Levels','FSc / Intermediate','A-Levels','Level 3','Diploma (DAE)',"Bachelor's degree",'Other'];
-const PR={Aviation:['Aircraft Maintenance Engineering (EASA Part-66)'],Computing:['HND Digital Technologies (Pearson)','Computing Level 4/5 (NCC Education)']};
+const PR={Aviation:['Aircraft Maintenance Engineering (EASA Part-66)'],Computing:['HND Digital Technologies (Pearson)']};
 const F=(l,n,t='text',o={})=>`<div class="fld ${o.w||''}" ${o.id?`id="${o.id}"`:''}><label>${l}${o.r?' <b>*</b>':''}</label>${
  t==='select'?`<select class="sel" name="${n}" ${o.r?'required':''}><option value="">Select</option>${(o.o||[]).map(x=>`<option>${x}</option>`).join('')}</select>`
  :t==='area'?`<textarea class="inp" name="${n}" rows="3" ${o.r?'required':''}></textarea>`
@@ -420,13 +427,7 @@ function vForm(){
    ${F('Program','program','select',{r:1})}${F('Intake','intake','select',{r:1,o:['Fall','Winter']})}
    ${F('HND Pathway','pathway','select',{r:1,id:'pw',w:'full',o:['Cyber Security','Artificial Intelligence','Data Science & Analytics']})}</div>
   <div id="av" class="hid"><div class="sub-h">Aviation-specific details</div>
-   <div class="fg">${F('Course Applied For','course','select',{r:1,o:['Aircraft Maintenance Engineering (B1/B2)','PPL','CPL','IR','Ground School','Recurrent','Other']})}
-    ${F('PCAA Reference Number (if any)','pcaa','text',{h:'Existing PCAA reference or student license number'})}
-    ${F('Medical Certificate Status','medst','select',{o:['Class 1','Class 2','Not yet obtained']})}
-    ${F('Medical Certificate Expiry Date','medex','date')}
-    ${F('Previous Flying Hours (if any)','hours','text',{h:'Total hours, type, and recency'})}
-    ${F('Previous License / Rating Held','lic')}
-    ${F('Local Police Verification','police','select',{w:'full',o:['Not required','Required, not yet applied','Applied','Submitted / verified'],h:'Required by some Pakistani flying academies'})}</div></div></section>
+   <div class="fg">${F('EASA Part-66 AML Category','amlcat','select',{r:1,w:'full',o:['B1','B2'],h:'Sets which modules are mandatory for this student under the Part-66 syllabus'})}</div></div></section>
 
  <section class="st" data-s="3">${HD('Educational background','Qualification and marks. Eligibility is checked automatically.')}
   <div class="fg">${F('Highest Qualification','qual','select',{r:1,o:QUAL})}${F('Institution Name','inst','text',{r:1})}
@@ -438,8 +439,7 @@ function vForm(){
 
  <section class="st" data-s="4">${HD('Documents','Upload scans or photos. Missing documents can be added later.','<span class="chip c-blue" id="dc">0 uploaded</span>')}
   <div class="docs">${UP('cnic','CNIC / B-Form copy','fa-id-card')}${UP('gcnic','Guardian CNIC copy','fa-user-shield')}${UP('cert','Educational certificates','fa-graduation-cap')}
-   ${UP('photos','Passport-size photos','fa-image')}${UP('exp','Experience letter (if any)','fa-briefcase')}
-   ${UP('police','Police verification','fa-shield-halved','av-only hid')}${UP('med','Medical certificate','fa-file-medical','av-only hid')}</div></section>
+   ${UP('photos','Passport-size photos','fa-image')}${UP('exp','Experience letter (if any)','fa-briefcase')}</div></section>
 
  <section class="st" data-s="5">${HD('Admission fee voucher','Non-refundable fee paid at the time of admission.')}
   <div class="feeg"><div class="fg">${F('Admission Fee (PKR)','fee','text',{ro:1,v:'150,000'})}${F('Discount (PKR)','disc','number',{v:'0'})}
@@ -467,8 +467,7 @@ function initForm(){
  const sch=()=>{const v=f.school.value,l=PR[v]||[];
   f.program.innerHTML='<option value="">Select</option>'+l.map(x=>`<option>${x}</option>`).join('');
   if(l.length===1)f.program.value=l[0];
-  $('#av').classList.toggle('hid',v!=='Aviation');
-  document.querySelectorAll('.av-only').forEach(e=>e.classList.toggle('hid',v!=='Aviation'));pw();elig()};
+  $('#av').classList.toggle('hid',v!=='Aviation');pw();elig()};
 
  const elig=()=>{const q=f.qual.value,m=+f.marks.value,t=+f.total.value,pc=t?Math.round(m/t*1000)/10:0,ex=+f.exp.value||0,sc=f.school.value,e=$('#el');
   f.pct.value=t&&m?pc+'%':'';
@@ -517,7 +516,7 @@ function initForm(){
   const due=Math.max(150000-(+f.disc.value||0),0),paid=+f.recv.value||0,e=f.dataset.e;
   const fs=paid>=due?'Paid':paid>0?'Partial':'Pending',st=e==='ok'?(paid>=due?'Enrolled':paid>0?'Fee paid':'Documents verified'):'Draft';
   const prog=f.school.value==='Aviation'?'AME (EASA)':/Pearson/.test(f.program.value)?'HND '+f.pathway.value.split(' &')[0]:'NCC Computing';
-  STU.unshift([esc(f.sname.value.trim()),sid,prog,'main',st,fs,{cnic:esc(f.cnic.value),mobile:esc(f.mobile.value),email:esc(f.email.value),g:esc(f.gname.value)}]);
+  STU.unshift([esc(f.sname.value.trim()),sid,prog,'main',st,fs,esc(f.cnic.value),{mobile:esc(f.mobile.value),email:esc(f.email.value),g:esc(f.gname.value)}]);
   $('#view').innerHTML=`<div class="card ok-card"><div class="okc"><i class="fa-solid fa-check"></i></div><h2>Student registered</h2>
    <p>${esc(f.sname.value)} has been added successfully.</p>
    <div class="idbox"><span>Student ID</span><b>${sid}</b></div>
@@ -537,12 +536,11 @@ function initForm(){
   if(t.name==='dob')$('#age').textContent=t.value?'Age: '+Math.floor((Date.now()-new Date(t.value))/31557600000)+' years':''});
  f.addEventListener('change',e=>{const t=e.target;
   if(t.name==='school')sch();if(t.name==='program')pw();
-  if(t.name==='medst'){f.medex.disabled=!/Class/.test(t.value);if(f.medex.disabled)f.medex.value=''}
   if(t.id==='same'){f.paddr.value=t.checked?f.addr.value:'';f.paddr.readOnly=t.checked}
   if(t.name==='photo'&&t.files[0]){const l=t.closest('.photo');l.style.backgroundImage=`url(${URL.createObjectURL(t.files[0])})`;l.querySelector('span').style.display='none'}
   else if(t.type==='file'){const l=t.closest('.up');l.classList.toggle('done',!!t.files.length);l.querySelector('span').textContent=t.files.length?t.files[0].name:'Click to upload';
    $('#dc').textContent=document.querySelectorAll('.up.done').length+' uploaded'}});
- f.medex.disabled=true;sch();go(0);
+ sch();go(0);
 }
 
 /* =====================================================
@@ -550,9 +548,9 @@ function initForm(){
 ===================================================== */
 const closeModal=()=>$('#modal').classList.remove('on');
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
-function viewStu(id){const s=STU.find(x=>x[1]===id),d=s[6]||{};
+function viewStu(id){const s=STU.find(x=>x[1]===id),d=s[7]||{};
  $('#mbox').innerHTML=`<h3>${s[0]}</h3><p class="sub">${s[1]} &middot; ${s[2]}</p><div class="sum">${
-  [['Status',s[4]],['Fee status',s[5]],['CNIC / B-Form',d.cnic],['Mobile',d.mobile],['Email',d.email],['Guardian',d.g]].map(x=>`<div><span>${x[0]}</span><b>${x[1]||'-'}</b></div>`).join('')
+  [['Status',s[4]],['Fee status',s[5]],['CNIC / B-Form',s[6]],['Mobile',d.mobile],['Email',d.email],['Guardian',d.g]].map(x=>`<div><span>${x[0]}</span><b>${x[1]||'-'}</b></div>`).join('')
  }</div><div class="acts"><button class="btn light" onclick="closeModal()">Close</button></div>`;$('#modal').classList.add('on')}
 function openModal(t,fields,save){
  $('#mbox').innerHTML=`<h3>${t}</h3><p class="sub">Fill in the details below.</p><form id="mf" novalidate><div class="fg">${
@@ -588,15 +586,15 @@ const D={
    a:{l:'Add Class',f:[['Day','select',['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']],['Time'],['Module / Unit'],['Batch'],['Faculty'],['Room']],d:[]}},
   {n:'Attendance',c:['Student','Batch','Days present','Total days','Attendance'],r:[['Ayesha Khan','AME-2026-A','46','50','92%'],['Hamza Ali','HND-CS-2026-A','44','50','88%'],['Sara Ahmed','HND-DS-2026-A','48','50','96%'],['Bilal Hussain','AME-2025-B','39','50','78%']]}]},
  fees:{s:'Fee vouchers, payments and receipts.',tabs:[
-  {n:'Vouchers',c:['Voucher','Student','Type','Amount (PKR)','Status'],r:[['VCH-26-0148','Ayesha Khan','Admission','150,000','Paid'],['VCH-26-0147','Hamza Ali','Admission','150,000','Partial'],['VCH-26-0146','Sara Ahmed','Admission','150,000','Pending'],['VCH-26-0145','Bilal Hussain','Semester','140,000','Paid'],['VCH-26-0144','Zainab Malik','Admission','150,000','Overdue']],
-   a:{l:'New Voucher',p:'VCH-26-',n:144,f:[['Student','select',stuOpt],['Type','select',['Admission','Semester','EASA Exam','International']],['Amount (PKR)','number']],d:['Pending']}},
+  {n:'Vouchers',c:['Voucher','Student','Type','Amount (PKR)','Paid (PKR)','Balance (PKR)','Status'],r:[['VCH-26-0148','Ayesha Khan','Admission','150,000','150,000','0','Paid'],['VCH-26-0147','Hamza Ali','Admission','150,000','80,000','70,000','Partial'],['VCH-26-0146','Sara Ahmed','Admission','150,000','0','150,000','Pending'],['VCH-26-0145','Bilal Hussain','Semester','140,000','140,000','0','Paid'],['VCH-26-0144','Zainab Malik','Admission','150,000','0','150,000','Overdue']],
+   a:{l:'New Voucher',p:'VCH-26-',n:144,f:[['Student','select',stuOpt],['Type','select',['Admission','Semester','EASA Exam','International']],['Amount (PKR)','number']],d:['0','@AMT','Pending']}},
   {n:'Payments',c:['Receipt','Student','Amount (PKR)','Method','Date'],r:[['RCT-1042','Ayesha Khan','150,000','Bank transfer','20 Sep 2026'],['RCT-1041','Hamza Ali','100,000','Cash','18 Sep 2026'],['RCT-1040','Bilal Hussain','140,000','Online payment','15 Sep 2026']],
    a:{l:'Record Payment',p:'RCT-',n:1040,f:[['Student','select',stuOpt],['Amount (PKR)','number'],['Method','select',['Cash','Bank transfer','Online payment','Cheque']]],d:['@']}}]},
  exams:{s:'Exam sessions, results and transcripts.',tabs:[
-  {n:'Exam sessions',c:['Session','Type','Registration deadline','Status'],r:[['Summer 2026','EASA Part-66','29 Jun 2026','Closed'],['Winter 2026','EASA Part-66','01 Dec 2026','Upcoming'],['Term 1 2026','Pearson HND','10 Oct 2026','Open']],
-   a:{l:'Add Session',f:[['Session'],['Type','select',['EASA Part-66','Pearson HND']],['Registration Deadline','date']],d:['Upcoming']}},
-  {n:'Results',c:['Student','Module / Unit','Attempt','Result'],r:[['Ayesha Khan','M1 Mathematics','1','Pass'],['Bilal Hussain','M2 Physics','1','Fail'],['Bilal Hussain','M2 Physics','2','Pass'],['Hamza Ali','Cyber Security','1','Pending']],
-   a:{l:'Enter Result',f:[['Student','select',stuOpt],['Module / Unit'],['Attempt','select',['1','2','3']],['Result','select',['Pass','Fail','Pending']]],d:[]}},
+  {n:'Exam sessions',c:['Session','Type','Registration deadline','Status'],r:[['Winter 2026','EASA Part-66','18 Oct 2026','Upcoming']],
+   a:{l:'Add Session',f:[['Session'],['Type','select',['EASA Part-66']],['Registration Deadline','date']],d:['Upcoming']}},
+  {n:'Results',c:['Student','Module','Attempt','Result'],r:[['Ayesha Khan','M1 Mathematics','1','Pass'],['Bilal Hussain','M2 Physics','1','Fail'],['Bilal Hussain','M2 Physics','2','Pass']],
+   a:{l:'Enter Result',f:[['Student','select',stuOpt],['Module'],['Attempt','select',['1','2','3']],['Result','select',['Pass','Fail','Pending']]],d:[]}},
   {n:'Transcripts',c:['Student','Program','Issued','Status'],r:[['Hina Tariq','HND Cyber Security','12 Sep 2026','Issued'],['Usman Raza','AME (EASA)','-','Requested']],
    a:{l:'Request Transcript',f:[['Student','select',stuOpt],['Program','select',PRG]],d:['-','Requested']}}]},
  assignments:{s:'HND assignments, submissions and grades.',tabs:[
@@ -605,9 +603,9 @@ const D={
   {n:'Grades',c:['Student','Assignment','Grade'],r:[['Hamza Ali','Network Design','Merit'],['Sara Ahmed','Network Design','Distinction'],['Hina Tariq','Network Design','Refer']],
    a:{l:'Add Grade',f:[['Student','select',stuOpt],['Assignment'],['Grade','select',['Distinction','Merit','Pass','Refer']]],d:[]}}]},
  ojt:{s:'On-the-job training partners and placements. Fees start from PKR 8,000.',tabs:[
-  {n:'Partners',c:['Company','Scope','Fee from (PKR)','Status'],r:[['Sample Partner A','Line maintenance','8,000','Active'],['Sample Partner B','Component overhaul','12,000','Active'],['Sample Partner C','Avionics','10,000','Inactive']],
-   a:{l:'Add Partner',f:[['Company'],['Scope'],['Fee From (PKR)','number']],d:['Active']}},
-  {n:'Placements',c:['Student','Partner','Start date','Hours'],r:[['Ayesha Khan','Sample Partner A','01 Sep 2026','120'],['Usman Raza','Sample Partner B','15 Aug 2026','260']],
+  {n:'Partners',c:['Company','Region','Fee from (PKR)','Status'],r:[['SAMROC','Pakistan','8,000','Active'],['Askari Flying Academy','Pakistan','8,000','Active'],['Rawalpindi Flying Club','Pakistan','8,000','Active'],['Karachi Aero Club','Pakistan','8,000','Active'],['Potohar Aviation Services','Pakistan','8,000','Active'],['Etihad Airways','Dubai / International','8,000','Active']],
+   a:{l:'Add Partner',f:[['Company'],['Region'],['Fee From (PKR)','number']],d:['Active']}},
+  {n:'Placements',c:['Student','Partner','Start date','Hours'],r:[['Ayesha Khan','SAMROC','01 Sep 2026','120'],['Usman Raza','Rawalpindi Flying Club','15 Aug 2026','260']],
    a:{l:'Add Placement',f:[['Student','select',stuOpt],['Partner'],['Start Date','date']],d:['0']}}]},
  documents:{s:'Letters, certificates and fee statements.',tabs:[{n:'Requests',c:['Student','Document','Requested','Status'],
   r:[['Hina Tariq','Enrolment letter','20 Sep 2026','Issued'],['Usman Raza','Transcript','19 Sep 2026','Requested'],['Ayesha Khan','Fee statement','18 Sep 2026','Issued']],
@@ -627,16 +625,17 @@ function vMod(m){
  <div class="card"><div class="tools"><div class="f"><i class="fa-solid fa-magnifying-glass"></i><input class="inp" id="mq" placeholder="Search ${t.n.toLowerCase()}"></div></div><div id="mt"></div></div>`;
 }
 const TAB={};
+const whoCell=name=>{const st=STU.find(x=>x[0]===name),idx=st?STU.indexOf(st):0;return `<div class="who"><div class="avatar" style="background:${COL[idx%5]}">${ini(name)}</div><div>${name}${st?`<small>${st[1]}</small>`:''}</div></div>`};
 const mTable=t=>{const q=($('#mq')?$('#mq').value:'').toLowerCase(),r=t.r.filter(x=>!q||x.join(' ').toLowerCase().includes(q));
  return r.length?`<div class="tbl"><table><thead><tr>${t.c.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map((v,i)=>`<td>${
-  v==='Generate'?`<button class="btn light sm" onclick="toast('Reports run once the backend is connected')">Generate</button>`:CHIP[v]?`<span class="chip ${CHIP[v]}">${v}</span>`:i===0?`<b>${v}</b>`:v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty">Nothing found.</div>'};
+  t.c[i]==='Student'?whoCell(v):v==='Generate'?`<button class="btn light sm" onclick="toast('Reports run once the backend is connected')">Generate</button>`:CHIP[v]?`<span class="chip ${CHIP[v]}">${v}</span>`:i===0?`<b>${v}</b>`:v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty">Nothing found.</div>'};
 function initMod(m){
  const d=D[m.id],t=d.tabs[TAB[m.id]||0];
  $('#mt').innerHTML=mTable(t);$('#mq').oninput=()=>{$('#mt').innerHTML=mTable(t)};
  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{TAB[m.id]=+b.dataset.t;render()});
  if($('#madd'))$('#madd').onclick=()=>{const a=t.a;
   openModal(a.l,a.f.map(x=>[x[0],x[1],typeof x[2]==='function'?x[2]():x[2]]),v=>{
-   t.r.unshift([...(a.p?[a.p+(a.n+t.r.length)]:[]),...v,...a.d.map(x=>x==='@'?TODAY():x)]);render();toast(a.l+': saved')})};
+   t.r.unshift([...(a.p?[a.p+(a.n+t.r.length)]:[]),...v,...a.d.map(x=>x==='@'?TODAY():x==='@AMT'?v[v.length-1]:x)]);render();toast(a.l+': saved')})};
 }
 
 /* ===== router ===== */
